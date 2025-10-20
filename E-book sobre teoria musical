@@ -28,4 +28,96 @@ Evite: desenhos, ilustrações, cartoon, mãos deformadas, textos borrados ou pr
 
 4°- Didático, detalhado (explicando teoria passo a passo, ideal para iniciantes) e Completo (teoria + prática + exemplos de aplicação em violão)
 
-5°
+CODIGO DO E_BOOK EM PYTHON: 
+from reportlab.lib.pagesizes import landscape, inch
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, PageBreak
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+
+# Registrar fonte compatível
+pdfmetrics.registerFont(UnicodeCIDFont("HeiseiMin-W3"))
+
+# Caminho do arquivo de saída
+output_path = "/mnt/data/O_Codigo_da_Harmonia_Joao_Borges.pdf"
+
+# Formato e-book (16:9)
+page_width = 11 * inch
+page_height = 6.1875 * inch
+doc = SimpleDocTemplate(output_path, pagesize=(page_width, page_height), title="O Código da Harmonia")
+
+styles = getSampleStyleSheet()
+styles.add(ParagraphStyle(name="Titulo", fontName="HeiseiMin-W3", fontSize=24, leading=28, alignment=1, textColor=colors.HexColor("#D4AF37")))
+styles.add(ParagraphStyle(name="Subtitulo", fontName="HeiseiMin-W3", fontSize=16, leading=20, alignment=1))
+styles.add(ParagraphStyle(name="Corpo", fontName="HeiseiMin-W3", fontSize=12, leading=16, alignment=4))
+styles.add(ParagraphStyle(name="Tabela", fontName="HeiseiMin-W3", fontSize=10, leading=14, alignment=1))
+
+# Caminho da capa
+cover_image = "/mnt/data/806cd35b-7b70-409a-a4e5-1b5a1133cfa3.png"
+
+content = []
+
+# Reduzir o tamanho da capa para caber corretamente
+content.append(Image(cover_image, width=page_width * 0.9, height=page_height * 0.9))
+content.append(PageBreak())
+
+# Conteúdo principal
+content.append(Paragraph("🎵 O CÓDIGO DA HARMONIA: DESVENDE O CAMPO HARMÔNICO", styles["Titulo"]))
+content.append(Spacer(1, 12))
+content.append(Paragraph("Autor: João Borges", styles["Subtitulo"]))
+content.append(Spacer(1, 20))
+content.append(Paragraph("A música é uma linguagem — e como toda linguagem, tem suas regras, estrutura e lógica interna. "
+                         "O campo harmônico é uma das chaves mais importantes para compreender essa lógica. "
+                         "Ele explica por que certos acordes combinam entre si e como criar progressões musicais agradáveis.",
+                         styles["Corpo"]))
+content.append(PageBreak())
+
+# Tabela do campo harmônico maior
+data = [
+    ["Grau", "Acorde", "Tipo"],
+    ["I", "C", "Maior"],
+    ["II", "Dm", "Menor"],
+    ["III", "Em", "Menor"],
+    ["IV", "F", "Maior"],
+    ["V", "G", "Maior"],
+    ["VI", "Am", "Menor"],
+    ["VII", "B°", "Diminuto"]
+]
+table = Table(data, colWidths=[1.2*inch, 1.5*inch, 2*inch])
+table.setStyle(TableStyle([
+    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#D4AF37")),
+    ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+    ("FONTNAME", (0, 0), (-1, -1), "HeiseiMin-W3"),
+    ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
+]))
+content.append(Paragraph("Campo Harmônico Maior de Dó (C)", styles["Subtitulo"]))
+content.append(Spacer(1, 12))
+content.append(table)
+content.append(PageBreak())
+
+# Corpo principal resumido
+text_sections = [
+    "As escalas são a base de toda harmonia. A escala maior segue o padrão de intervalos: Tom – Tom – Semitom – Tom – Tom – Tom – Semitom.",
+    "Um acorde é a combinação de três ou mais notas tocadas simultaneamente. Ele é formado por tônica, terça e quinta.",
+    "O campo harmônico é o conjunto de acordes derivados de uma mesma escala, que formam a base de praticamente todas as músicas ocidentais.",
+    "As funções harmônicas (tônica, subdominante e dominante) são responsáveis pelo movimento e resolução musical.",
+    "Aplicando o campo harmônico no violão, você pode criar progressões naturais e musicais, como C–Am–F–G ou Am–F–C–G."
+]
+
+for section in text_sections:
+    content.append(Paragraph(section, styles["Corpo"]))
+    content.append(Spacer(1, 14))
+
+content.append(PageBreak())
+content.append(Paragraph("Conclusão", styles["Subtitulo"]))
+content.append(Paragraph("Com o domínio do campo harmônico, você entende a estrutura que sustenta a harmonia musical. "
+                         "Continue explorando, ouvindo e praticando para transformar teoria em expressão musical.",
+                         styles["Corpo"]))
+
+# Criar PDF
+doc.build(content)
+
+output_path
+
